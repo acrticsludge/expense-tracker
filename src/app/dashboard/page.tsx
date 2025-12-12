@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 
 export default function Dashboard() {
   const [expenses, setExpenses] = useState([]);
+  const [budget, setBudget] = useState(0);
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("expenses") || "[]");
@@ -17,7 +18,11 @@ export default function Dashboard() {
     (sum, e) => sum + Number((e as any).amount),
     0
   );
-  const budget = 20000;
+  useEffect(() => {
+    const savedBudget = localStorage.getItem("budget");
+    if (savedBudget) setBudget(Number(savedBudget));
+  }, []);
+
   const remaining = budget - Number(totalSpent);
 
   const sortedExpenses = [...expenses].sort(
