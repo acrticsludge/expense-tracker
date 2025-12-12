@@ -1,6 +1,6 @@
 # Expense Tracker Web App
 
-A modern **Expense Tracker** web application built with **Next.js**, featuring **analytics, budget management, and Google login**. Keep track of your spending, visualize expenses, and manage preferences with a sleek, responsive interface.
+A modern **Expense Tracker** web application built with **Next.js**, featuring **analytics and budget management**. Keep track of your spending, visualize expenses, and manage preferences with a sleek, responsive interface.
 
 ---
 
