@@ -12,8 +12,48 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AddExpensePage() {
+  interface Expense {
+    id: string;
+    amount: number;
+    category: string;
+    payment: string;
+    date: string;
+    notes?: string;
+  }
+  const [amount, setAmount] = useState(0);
+  const [category, setCategory] = useState("");
+  const [payment, setPayment] = useState("");
+  const [date, setDate] = useState("");
+  const [notes, setNotes] = useState("");
+  const router = useRouter();
+
+  function handleSubmit() {
+    try {
+      if (!amount || !category || !payment || !date) {
+        alert("Please fill all fields except notes.");
+        return;
+      }
+
+      const newExpense: Expense = {
+        id: crypto.randomUUID(),
+        amount,
+        category,
+        payment,
+        date,
+        notes,
+      };
+      const oldExpenses = JSON.parse(localStorage.getItem("expenses") || "[]");
+      const updatedExpenses = [...oldExpenses, newExpense];
+      localStorage.setItem("expenses", JSON.stringify(updatedExpenses));
+      router.push("/dashboard");
+    } catch (e) {
+      console.log("Error: \n", e);
+    }
+  }
   return (
     <div className="max-w-md mx-auto pt-10 px-4">
       <Card className="shadow-sm border bg-white">
@@ -31,13 +71,15 @@ export default function AddExpensePage() {
               type="number"
               placeholder="Enter amount"
               className="bg-white"
+              value={amount}
+              onChange={(e) => setAmount(Number(e.target.value))}
             />
           </div>
 
           {/* Category */}
           <div className="space-y-2">
             <Label>Category</Label>
-            <Select>
+            <Select onValueChange={(value) => setCategory(value)}>
               <SelectTrigger className="bg-white">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
@@ -55,7 +97,7 @@ export default function AddExpensePage() {
           {/* Payment Method */}
           <div className="space-y-2">
             <Label>Payment Method</Label>
-            <Select>
+            <Select onValueChange={(value) => setPayment(value)}>
               <SelectTrigger className="bg-white">
                 <SelectValue placeholder="Select payment method" />
               </SelectTrigger>
@@ -70,17 +112,32 @@ export default function AddExpensePage() {
           {/* Date */}
           <div className="space-y-2">
             <Label>Date</Label>
-            <Input type="date" className="bg-white" />
+            <Input
+              type="date"
+              className="bg-white"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
           </div>
 
           {/* Notes */}
           <div className="space-y-2">
             <Label>Notes</Label>
-            <Textarea placeholder="Optional" className="bg-white" />
+            <Textarea
+              placeholder="Optional"
+              className="bg-white"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+            />
           </div>
 
           {/* Button */}
-          <Button className="w-full text-white">Add Expense</Button>
+          <Button
+            className="w-full text-white cursor-pointer"
+            onClick={handleSubmit}
+          >
+            Add Expense
+          </Button>
         </CardContent>
       </Card>
     </div>
